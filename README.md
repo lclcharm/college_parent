@@ -14,21 +14,22 @@
 
 #### 运行效果
 
-![](.\image\首页.png)
+![](./image/首页.png)
 
-![](.\image\课程.png)
+![](./image/课程.png)
 
-![](.\image\讲师.png)
+![](./image/讲师.png)
 
-![](.\image\讲师介绍.png)
+![](./image/讲师介绍.png)
 
-![](.\image\文章资讯.png)
+![](./image/文章资讯.png)
 
-![](.\image\问答.png)
+![](./image/问答.png)
 
 ## 项目模块
 
 前端（前后台）
+
 https://gitee.com/lclcharm/college_admin
 https://gitee.com/lclcharm/college_site
 
