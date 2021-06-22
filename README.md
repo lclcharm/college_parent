@@ -31,10 +31,12 @@
 前端（前后台）
 
 https://gitee.com/lclcharm/college_admin
+
 https://gitee.com/lclcharm/college_site
 
 后端
-https://gitee.com/lclcharm/college_back
+
+https://gitee.com/lclcharm/college_parent
 
 ### 本地启动运行
 
