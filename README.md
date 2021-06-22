@@ -18,8 +18,6 @@
 
 ![](./image/课程.png)
 
-![](./image/讲师.png)
-
 ![](./image/讲师介绍.png)
 
 ![](./image/文章资讯.png)
