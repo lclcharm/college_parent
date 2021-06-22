@@ -1,0 +1,111 @@
+version: "3"
+services:
+  mysqlCollege:
+    image: mysql:5.7
+    container_name: mysqlCollege
+    restart: always
+    ports:
+      - "3307:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: nacos
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_PASSWORD: 123456
+      MYSQL_USER: root
+    volumes:
+      - /d/Docker/docker/mysqlCollege/logs:/logs
+      - /d/Docker/docker/mysqlCollege/data:/var/lib/mysql
+    networks:
+      - bridge
+  nacosCollege:
+    image: nacos/nacos-server
+    container_name: nacosCollege
+    restart: always
+    depends_on:
+      - mysqlCollege
+    environment:
+      PREFER_HOST_MODE: hostname #如果支持主机名可以使用hostname,否则使用ip，默认也是ip
+      SPRING_DATASOURCE_PLATFORM: mysql #数据源平台 仅支持mysql或不保存empty
+      MODE: standalone
+      MYSQL_SERVICE_HOST: mysqlCollege
+      MYSQL_SERVICE_DB_NAME: nacos #数据库名
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: root #数据库管理账号
+      MYSQL_SERVICE_PASSWORD: 123456 #数据库管理密码
+      NACOS_APPLICATION_PORT: 8848
+      JVM_XMS: 512m
+      JVM_MMS: 320m
+    volumes:
+      - /d/Docker/docker/nacosCollege/logs:/home/nacos/logs
+      - /d/Docker/docker/nacosCollege/plugins/:/home/nacos/plugins
+      - /d/Docker/docker/nacosCollege/conf/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - "8848:8848"
+      - "9999:9999"
+    networks:
+      - bridge
+  redisCollege:
+    image: redis
+    container_name: redisCollege
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /d/Docker/docker/redisCollege/data:/data
+      - /d/Docker/docker/redisCollege/redis.conf:/usr/local/redis/redis.conf
+      - /d/Docker/docker/redisCollege/logs:/logs
+    command: ["redis-server","/usr/local/redis/redis.conf"]
+    networks:
+      - bridge
+  sentinelCollege:
+    container_name: sentinelCollege
+    image: bladex/sentinel-dashboard:1.8.0
+    ports:
+      - "8080:8858"
+    restart: on-failure
+    networks:
+      - bridge
+  mongoDPlayer:
+    image: mongo:latest
+    container_name: mongoDPlayer
+    ports:
+      - "127.0.0.1:27017:27017"
+#    volumes:
+#      - /d/Docker/docker/mongoDPlayer/db:/data/db
+  redisDPlayer:
+    image: redis:latest
+    container_name: redisDPlayer
+    ports:
+      - "127.0.0.1:6380:6379"
+    volumes:
+      - /d/Docker/docker/redisDplayer/data:/data
+      - /d/Docker/docker/redisDplayer/redis.conf:/usr/local/redis/redis.conf
+      - /d/Docker/docker/redisDplayer/logs:/logs
+    environment:
+      - TZ=Asia/Shanghai
+    command: ["redis-server","/usr/local/redis/redis.conf"]
+  web:
+    build: ./DPlayer
+    container_name: webDPlayer
+    links:
+      - mongoDPlayer
+      - redisDPlayer
+    depends_on:
+      - mongoDPlayer
+      - redisDPlayer
+    ports:
+      - 1207:1207
+    environment:
+      REDIS_HOST: "redisDPlayer"
+      REDIS_PORT: 6379
+      MONGO_HOST: "mongoDPlayer"
+      MONGO_PORT: 27017
+      MONGO_DATABASE: "danmaku"
+    volumes:
+      - /d/Docker/docker/webDPlayer/logs:/usr/src/app/logs
+      - /d/Docker/docker/webDPlayer/pm2logs:/root/.pm2/logs
+
+networks: #定义服务用到桥
+  bridge: #定义上面的服务用到的网桥名称 默认创建就是 bridge

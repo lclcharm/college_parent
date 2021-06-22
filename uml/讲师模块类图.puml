@@ -1,0 +1,146 @@
+@startuml
+skinparam classAttributeIconSize 0
+class TeacherController{
+    -teacherService
+    +listAll()
+    +removeRows()
+    +listPage()
+    +save()
+    +updateById()
+    +getById()
+    +selectNameListByKey()
+}
+class ApiTeacherController{
+    -teacherService
+    +listAll()
+    +get()
+}
+
+class TeacherQueryVo{
+   -name
+   -level
+   -joinDateBegin
+   -joinDateEnd
+}
+
+class Teacher{
+    -name
+    -intro
+    -career
+    -level
+    -avatar
+    -sort
+    -joinDate
+    -deleted
+}
+
+class WebCourseVo{
+    -id;
+    -title;
+    -price;
+    -lessonNum;
+    -cover;
+    -buyCount;
+    -viewCount;
+    -description;
+    -teacherId;
+    -teacherName;
+    -intro;
+    -avatar;
+    -subjectLevelOneId;
+    -subjectLevelOne;
+    -subjectLevelTwoId;
+    -subjectLevelTwo;
+}
+
+class CourseDto{
+    -id
+    -title
+    -price
+    -cover
+    -teacherName
+}
+
+class BaseEntity{
+    -id
+    -gmtCreate
+    -gmtModified
+}
+
+interface TeacherMapper{
+
+}
+
+interface TeacherService{
+    +selectPage()
+    +selectNameListByKey()
+    +removeAvatarById()
+    +selectTeacherInfoById()
+    +selectHotTeacher()
+}
+
+class TeacherServiceImpl{
+    -ossFileService
+    -courseMapper
+    +selectPage()
+    +selectNameListByKey()
+    +removeAvatarById()
+    +selectTeacherInfoById()
+    +selectHotTeacher()
+}
+
+class R{
+    -success
+    -code
+    -message
+    -data
+    +ok()
+    +error()
+    +setResult()
+    +success()
+    +message()
+    +code()
+    +data()
+}
+interface OssFileService{
+    +removeFile()
+}
+class OssFileServiceImpl{
+    -ossProperties
+    +upload()
+    +removeFile()
+}
+
+interface CourseMapper{
+    +selectPageByCourseQueryVo()
+    +selectCoursePublishVoById(String id)
+    +selectWebCourseVoById(String courseId)
+    +selectCourseDtoById(String courseId)
+}
+
+class OssFileServiceFallBack{
+    +removeFile()
+}
+
+ApiTeacherController ..> R
+TeacherController ..>R
+ApiTeacherController ..> TeacherQueryVo
+TeacherController ..>TeacherQueryVo
+TeacherController ..>TeacherService
+
+TeacherMapper ..> Teacher
+CourseMapper ..> CourseDto
+CourseMapper ..> WebCourseVo
+
+TeacherServiceImpl .|>TeacherService
+
+Teacher --|> BaseEntity
+
+TeacherServiceImpl -->TeacherMapper
+TeacherServiceImpl -->CourseMapper
+TeacherServiceImpl -->OssFileService
+OssFileServiceFallBack --> OssFileService
+OssFileService <|..OssFileServiceImpl
+
+
+@enduml

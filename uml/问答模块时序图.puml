@@ -1,0 +1,11 @@
+@startuml
+web -> API网关: 请求上传
+API网关 -> service_edu: 路由
+service_edu->ApiQuestionController:addQuestions()
+ApiQuestionController->QuestionService:save()
+QuestionService->QuestionMapper:save()
+QuestionMapper-->QuestionService:data
+QuestionService-->ApiQuestionController:data
+ApiQuestionController-->service_edu:R
+service_edu-->web:返回结果
+@enduml

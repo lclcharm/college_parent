@@ -1,0 +1,26 @@
+@startuml
+web -> API网关: 图片上传
+API网关 -> "service_oss": 路由
+"service_oss"->FileController:upload()
+FileController->FileService:upload
+FileService->阿里oss云服务:上传
+阿里oss云服务-->FileService:uploadUrl
+FileService-->FileController:url
+FileController-->web:R
+web -> API网关: 视频上传
+API网关 -> "service_vod": 路由
+"service_vod"->VodController:uploadVideo()
+VodController->VodService:uploadVideo()
+VodService->阿里vod云服务:上传、加密
+阿里vod云服务-->VodService:videoId
+VodService-->VodController:videoId
+VodController-->web:R
+web->service_edu:上传课程信息
+service_edu->CourseController:saveCourseInfo()
+CourseController->CourseService:saveCourseInfo()
+CourseService->CourseDao:insert()
+CourseDao-->CourseService:boolean
+CourseService-->CourseController:boolean
+CourseController-->web:R
+
+@enduml

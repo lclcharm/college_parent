@@ -1,0 +1,246 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class R{
+    -success
+    -code
+    -message
+    -data
+    +ok()
+    +error()
+    +setResult()
+    +success()
+    +message()
+    +code()
+    +data()
+}
+
+class BaseEntity{
+    -id
+    -gmtCreate
+    -gmtModified
+}
+
+class ApiQuestionController{
+    -questionService
+    -questionTagService
+    -memberService
+    -questionCommentService
+    -questionTagRelationService
+    +PageList()
+    +hotQuestion()
+    +showQuestionTags()
+    +getQuestionInfoById()
+    +addQuestions()
+    +addQuestionComment()
+    +getQuestionByMember()
+    +getQuestionCommentByMember()
+    +PageListByMember()
+}
+
+interface QuestionService{
+    +queryHotQuestions()
+    +getQuestionList()
+    +getQuestionById()
+    +saveRelationByQuestionId()
+    +getQuestionsByMemberId()
+    +getQuestionListByMemberId()
+}
+
+interface QuestionCommentService{
+    +getBestComment()
+    +getQuestionCommentByQuestionId()
+    +addQuestionComment()
+    +getQuestionCommentsByMemberId()
+}
+
+interface QuestionTagRelationService{
+    +insertQuestionTagRelation()
+}
+interface QuestionTagService{
+    +getTagIdsByQuestionId()
+}
+
+interface MemberService{
+    +register()
+    +login()
+    +getByOpenid()
+    +getMemberDtoByMemberId()
+    +countRegisterNum()
+    +selectPage()
+    +selectMemberInfoById()
+    +selectNameListByKey()
+    +updatePassword()
+    +updateMemberInfo()
+    +updateAvatar()
+}
+
+class QuestionServiceImpl{
+    -questionMapper
+    +queryHotQuestions()
+    +getQuestionList()
+    +getQuestionById()
+    +saveRelationByQuestionId()
+    +getQuestionsByMemberId()
+    +getQuestionListByMemberId()
+}
+
+class QuestionCommentServiceImpl{
+    -questionMapper
+    +getBestComment()
+    +getQuestionCommentByQuestionId()
+    +addQuestionComment()
+    +getQuestionCommentsByMemberId()
+}
+
+class QuestionTagRelationService{
+    +insertQuestionTagRelation()
+}
+class QuestionTagServiceImpl{
+    +getTagIdsByQuestionId()
+}
+
+class MemberServiceImpl{
+    -redisTemplate
+    -redisUtil
+    +register()
+    +login()
+    +getByOpenid()
+    +getMemberDtoByMemberId()
+    +countRegisterNum()
+    +selectPage()
+    +selectMemberInfoById()
+    +selectNameListByKey()
+    +updatePassword()
+    +updateMemberInfo()
+    +updateAvatar()
+}
+
+class RedisUtil{
+    -redisTemplate
+    +set()
+    +get()
+}
+
+interface QuestionCommentMapper{
+
+}
+interface QuestionMapper{
+    +insertByQuestionId
+}
+interface QuestionTagMapper{
+    +getTagIdsByQuestionId
+}
+interface QuestionTagRelationMapper{
+}
+class QuestionCommentVo{
+    -id
+    -cusId
+    -questionId
+    -content
+    -best
+    -replyCount
+    -praiseCount
+    -parentId
+    -gmtCreate
+    -gmtModified
+    -cusName
+    -cusAvatar
+}
+class QuestionQueryVo{
+    -title
+    -status
+    -type
+    -orderby
+}
+class QuestionVo{
+    -id
+    -cusId
+    -title
+    -content
+    -type
+    -status
+    -replyCount
+    -browseCount
+    -praiseCount
+    -gmtCreate
+    -gmtModified
+    -cusName
+    -cusAvatar
+    -questionComment
+    -questionComments
+    -questionTags
+    questionCommentVos
+}
+class Question{
+    -cusId
+    -title
+    -content
+    -type
+    -status
+    -replyCount
+    -browseCount
+    -praiseCount
+}
+class QuestionTag{
+    -questionTagName
+    -status
+    -parentId
+    -deleted
+}
+class QuestionComment{
+    -cusId
+    -questionId
+    -content
+    -best
+    -replyCount
+    -praiseCount
+    -parentId
+}
+class QuestionTagRelation{
+    -questionId
+    -questionTagId
+}
+
+R <.. ApiQuestionController
+QuestionVo <.. ApiQuestionController
+QuestionCommentVo <.. ApiQuestionController
+QuestionQueryVo <.. ApiQuestionController
+
+ApiQuestionController -->QuestionService
+ApiQuestionController -->QuestionTagService
+ApiQuestionController -->MemberService
+ApiQuestionController --->QuestionCommentService
+ApiQuestionController --->QuestionTagRelationService
+
+QuestionService <|.. QuestionServiceImpl
+QuestionTagService <|.. QuestionTagServiceImpl
+MemberService <|... MemberServiceImpl
+QuestionCommentService <|.. QuestionCommentServiceImpl
+QuestionTagRelationService <|.. QuestionTagRelationServiceImpl
+
+QuestionServiceImpl --> QuestionMapper
+QuestionTagServiceImpl --> QuestionTagMapper
+MemberServiceImpl --> RedisUtil
+MemberServiceImpl-->MemberMapper
+QuestionCommentServiceImpl ---> QuestionCommentMapper
+QuestionTagRelationServiceImpl --> QuestionTagRelationMapper
+
+
+
+Question <.. QuestionMapper
+QuestionComment <.. QuestionCommentMapper
+QuestionTag <. QuestionTagMapper
+QuestionTagRelation <. QuestionTagRelationMapper
+
+
+Question --|> BaseEntity
+QuestionComment --|> BaseEntity
+QuestionTag --|> BaseEntity
+QuestionTagRelation --|> BaseEntity
+
+QuestionVo -o QuestionComment
+QuestionVo -o QuestionTag
+QuestionVo -o QuestionCommentVo
+
+@enduml

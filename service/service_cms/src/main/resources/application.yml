@@ -1,0 +1,45 @@
+server:
+  port: 8140 #服务端口
+
+spring:
+  profiles:
+    active: dev #环境设置
+  application:
+    name: service-cms #服务名
+  cloud:
+    nacos:
+      discovery:
+#        server-addr: 127.0.0.1:8849
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        port: 8081
+        dashboard: 127.0.0.1:8080
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: #默认为空
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:31542/edu_cms?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+
+  jackson: #返回json的全局时间格式
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #mybatis日志
+  mapperLocations: classpath:**/xml/*.xml
+
+ribbon:
+  ConnectTimeout: 10000 #连接建立的超时时长，默认1秒
+  ReadTimeout: 10000 #处理请求的超时时间，默认为1秒
+
+feign:
+  sentinel:
+    enabled: true

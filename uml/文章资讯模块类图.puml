@@ -1,0 +1,165 @@
+@startuml
+skinparam classAttributeIconSize 0
+'class TeacherController{
+'    -teacherService
+'    +listAll()
+'    +removeRows()
+'    +listPage()
+'    +save()
+'    +updateById()
+'    +getById()
+'    +selectNameListByKey()
+'}
+
+class ApiArticleController{
+    -articleService
+    +index()
+    +getById()
+    +addCommentCount()
+}
+class ArticleController{
+    -articleService
+    +save()
+    +update()
+    +deleteBatch()
+    +remove()
+    +index()
+    +getById()
+}
+
+class ArticleQueryVo{
+    -queryKey
+    -articleType
+    -orderby
+    -count
+    -joinDateBegin
+    -joinDateEnd
+}
+class ArticleVo{
+    -title
+    -summary
+    -keyWord
+    -imageUrl
+    -source
+    -author
+    -articleType
+    -clickNum
+    -praiseCount
+    -sort
+    -content
+    -commentNum
+}
+
+class Article{
+    -title
+    -summary
+    -keyWord
+    -imageUrl
+    -source
+    -author
+    -articleType
+    -clickNum
+    -praiseCount
+    -sort
+    -commentNum
+    -deleted
+}
+
+class ArticleContent{
+    -id
+	-content
+}
+
+class R{
+    -success
+    -code
+    -message
+    -data
+    +ok()
+    +error()
+    +setResult()
+    +success()
+    +message()
+    +code()
+    +data()
+}
+
+class BaseEntity{
+    -id
+    -gmtCreate
+    -gmtModified
+}
+
+interface ArticleService{
+   +createArticle()
+   +addArticleContent()
+   +updateArticle()
+   +updateArticleContent()
+   +deleteArticleByIds()
+   +queryArticleById()
+   +queryArticleContentByArticleId()
+   +queryArticlePage()
+   +pageQueryArticle()
+   +updateArticleNum()
+   +queryArticleList()
+   +queryAllArticleCount()
+   +getArticleRankList()
+   +addCommentCount()
+}
+
+class ArticleServiceImpl{
+    -baseMapper
+    -articleMapper
+    +createArticle()
+   +addArticleContent()
+   +updateArticle()
+   +updateArticleContent()
+   +deleteArticleByIds()
+   +queryArticleById()
+   +queryArticleContentByArticleId()
+   +queryArticlePage()
+   +pageQueryArticle()
+   +updateArticleNum()
+   +queryArticleList()
+   +queryAllArticleCount()
+   +getArticleRankList()
+   +addCommentCount()
+}
+
+interface ArticleMapper{
+    +createArticle()
+    +addArticleContent()
+    +updateArticle()
+    +updateArticleContent()
+    +deleteArticleByIds()
+    +deleteArticleContentByArticleIds()
+    +queryArticleById()
+    +queryArticleContentByArticleId()
+    +queryArticlePage()
+    +updateArticleNum()
+    +queryArticleList()
+    +queryAllArticleCount()
+    +getArticleRankList()
+}
+
+ApiArticleController ..> R
+ApiArticleController ..> ArticleVo
+ApiArticleController ...> ArticleQueryVo
+
+ArticleController ..> ArticleQueryVo
+ArticleController ..> ArticleVo
+ArticleController ..> R
+ApiArticleController --> ArticleService
+ArticleController --> ArticleService
+
+ArticleService <|.. ArticleServiceImpl
+
+ArticleServiceImpl -> ArticleMapper
+
+ArticleMapper .> Article
+ArticleMapper ..> ArticleContent
+
+
+Article --|> BaseEntity
+
+@enduml

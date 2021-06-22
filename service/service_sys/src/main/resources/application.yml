@@ -1,0 +1,50 @@
+server:
+  port: 8190 #服务端口
+spring:
+  profiles:
+    active: dev
+  application:
+    name: service-sys
+  datasource:
+    url: jdbc:mysql://127.0.0.1:31542/edu_college?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+
+  servlet:
+    multipart:
+      max-file-size: 2048MB #最大上传单个文件大小：默认1M
+      max-request-size: 2048MB #最大置总上传的数据大小 ：默认10M
+
+  #日期格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        port: 8081 #跟控制台交流的端口，随意指定一个未使用的端口即可
+        dashboard: 127.0.0.1:8080 #指定控制台服务的地址
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password:  #默认为空
+
+ribbon:
+  ConnectTimeout: 15000 #连接建立的超时时长，默认1秒
+  ReadTimeout: 15000 #处理请求的超时时间，默认为1秒
+
+feign:
+  sentinel:
+    enabled: true
+
+mybatis-plus:
+  mapperLocations: classpath:**/xml/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.lcl.college.service.edu.entity

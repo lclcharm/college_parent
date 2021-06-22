@@ -1,0 +1,18 @@
+@startuml
+web -> API网关: 图片上传
+API网关 -> "service_oss": 路由
+"service_oss"->FileController:upload()
+FileController->FileService:upload
+FileService->阿里oss云服务:上传
+阿里oss云服务-->FileService:uploadUrl
+FileService-->FileController:url
+FileController-->web:R
+
+web->service_edu:增加文章资讯信息
+service_edu->ArticleController:saveArticleInfo()
+ArticleController->ArticleService:saveArticleInfo()
+ArticleService->ArticleMapper:insert()
+ArticleMapper-->ArticleService:boolean
+ArticleService-->ArticleController:boolean
+ArticleController-->web:R
+@enduml

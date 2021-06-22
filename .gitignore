@@ -1,0 +1,19 @@
+HELP.md
+**/target/
+
+# IDEA自带文件
+.idea
+*.iws
+*.iml
+*.ipr
+/**/mvnw**
+
+# 日志文件
+/logger/
+
+# 开发环境和生产环境
+/**/*dev*
+/**/*pro*
+
+# 全局配置
+/**/bootstrap*

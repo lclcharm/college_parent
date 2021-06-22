@@ -1,0 +1,168 @@
+@startuml
+skinparam classAttributeIconSize 0
+class ApiMemberController{
+    register()
+    login()
+    getLoginInfo()
+
+}
+
+interface MemberService{
+    register()
+    login()
+}
+
+class MemberServiceImpl{
+    register()
+    login()
+}
+
+interface MemberMapper{
+    selectRegisterNumByDay()
+}
+
+class R{
+-success
+-code
+-message
+-data
++ok()
++error()
++setResult()
++success()
++message()
++code()
++data()
+}
+
+enum ResultCodeEnum{
+   -success;
+    -code;
+    -message;
+    +ResultCodeEnum()
+}
+
+class Member{
+    -openid;
+    -mobile;
+    -password;
+    -email;
+    -nickname;
+    -sex;
+    -age;
+    -avatar;
+    -sign;
+    -disabled;
+    -deleted;
+    +getXxx()
+    +setXxx()
+}
+
+class RedisUtil{
+    -redisTemplate
+    +set()
+    +get()
+}
+
+class MD5{
++encrypt()
+}
+class JwtUtils{
+   -APP_SECRET
+   -ADVANCE_EXPIRE_TIME
+   +getKeyInstance()
+   +getJwtToken()
+   +checkJwtTToken()
+}
+
+class JwtInfo{
+    -id;
+    -nickname;
+    -avatar;
+}
+class BaseEntity{
+    -id;
+    -gmtCreate;
+    -gmtModified;
+}
+
+
+class CollegeException{
+    -code
+    +CollegeException()
+    +toString()
+}
+
+class ApiWxController{
+    -ucenterProperties
+    -memberService
+    +genQrConnect()
+    +callback()
+}
+class UcenterProperties{
+    -appId;
+    -appSecret;
+    -redirectUri;
+}
+
+class LoginVo{
+ -userInfo;
+ -password;
+}
+
+class MemberQueryVo{
+    -nickname;
+    -sex;
+    -joinDateBegin;
+    -joinDateEnd;
+}
+
+class RegisterVo{
+    -nickname;
+    -mobile;
+    -email;
+    -password;
+    -code;
+}
+
+class UpdateVo{
+    -id;
+    -nickname;
+    -mobile;
+    -email;
+    -code;
+    -oldPassword;
+    -newPassword;
+    -avatar;
+    -sex;
+    -age;
+    -sign;
+}
+
+ApiWxController .> UcenterProperties
+ApiWxController --> MemberService
+ApiWxController --> CollegeException
+ApiMemberController ---> MemberService
+ApiMemberController ----> CollegeException
+
+ApiMemberController ...> R
+ApiWxController ...> R
+
+MemberService <|-- MemberServiceImpl
+BaseEntity <|- Member
+RuntimeException <|-- CollegeException
+
+
+MemberServiceImpl -> MemberMapper
+ApiMemberController ---> RedisUtil
+ApiMemberController ---> JwtUtils
+JwtUtils ..> JwtInfo
+CollegeException --> ResultCodeEnum
+MemberServiceImpl ..> MD5
+ApiMemberController ..> LoginVo
+ApiMemberController .> MemberQueryVo
+ApiMemberController ..> RegisterVo
+ApiMemberController .> UpdateVo
+
+MemberMapper ..> Member
+@enduml

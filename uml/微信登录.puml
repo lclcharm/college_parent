@@ -1,0 +1,10 @@
+@startuml
+微信用户 -> web:请求登录
+web -> 微信开放平台:请求微信OAuth2.0授权登录
+微信开放平台 -->微信用户:请求用户确认
+微信用户->微信开放平台:用户确认
+微信开放平台-->web:重定向到web，携带授权临时票据
+web->微信开放平台:通过code加上appid和appsecret换取access_token
+微信开放平台->web:返回access_token
+
+@enduml

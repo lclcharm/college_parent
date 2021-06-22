@@ -1,0 +1,312 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+
+class R{
+    -success
+    -code
+    -message
+    -data
+    +ok()
+    +error()
+    +setResult()
+    +success()
+    +message()
+    +code()
+    +data()
+}
+
+'enum ResultCodeEnum{
+'   -success;
+'    -code;
+'    -message;
+'    +ResultCodeEnum()
+'}
+
+class RedisUtil{
+    -redisTemplate
+    +set()
+    +get()
+}
+
+
+class JwtUtils{
+   -APP_SECRET
+   -ADVANCE_EXPIRE_TIME
+   +getKeyInstance()
+   +getJwtToken()
+   +checkJwtTToken()
+}
+
+class JwtInfo{
+    -id;
+    -nickname;
+    -avatar;
+}
+class BaseEntity{
+    -id;
+    -gmtCreate;
+    -gmtModified;
+}
+
+
+'class CollegeException{
+'    -code
+'    +CollegeException()
+'    +toString()
+'}
+
+class CourseController{
+    -courseService;
+    -videoService;
+    +saveCourseInfo()
+    +getById()
+    +updateCourseInfoById()
+    +index()
+    +removeById()
+    +getCoursePublishVoById()
+    +publishCourseById()
+}
+class ApiCourseCollectController{
+    -courseCollectService
+    +isCollect()
+    +save()
+    +collectList()
+    +remove()
+}
+class ApiCourseController{
+    -courseService
+    -chapterService
+    +list()
+    +getById()
+    +getCourseDtoById()
+    +updateBuyCountById()
+}
+class ChapterController{
+    -chapterService;
+    -videoService;
+    +save()
+    +getById()
+    +updateById()
+    +removeById()
+    +nestedListByCourseId()
+}
+
+interface ChapterService{
+    +removeChapterById();
+    +nestedList();
+}
+interface CourseCollectService{
+    +isCollect()
+    +saveCourseCollect()
+    +selectListByMemberId()
+    +removeCourseCollect
+}
+interface CourseDescriptionService{
+}
+
+interface CourseService{
+    +saveCourseInfo()
+    +getCourseInfoById()
+    +updateCourseInfoById()
+    +selectPage()
+    +removeCoverById()
+    +removeCourseById()
+    +getCoursePublishVoById()
+    +publishCourseById()
+    +webSelectList()
+    +selectWebCourseVoById()
+    +selectHotCourse()
+    +getCourseDtoById()
+    +updateBuyCountById()
+}
+'interface QuestionCommentService{
+'    +getBestComment();
+'    +getQuestionCommentByQuestionId();
+'    +addQuestionComment();
+'    +getQuestionCommentsByMemberId();
+'}
+
+interface VideoService{
+    removeMediaVideoById(String id);
+    removeMediaVideoByChapterId();
+    removeMediaVideoByCourseId();
+}
+
+interface OssFileService{
+    +upload()
+    +removeFile()
+}
+
+class ChapterServiceImpl{
+    -videoMapper
+    +removeChapterById()
+    +nestedList()
+}
+class CourseCollectServiceImpl{
+    +isCollect()
+    +saveCourseCollect()
+    +selectListByMemberId()
+    +removeCourseCollect()
+}
+
+class CourseDescriptionServiceImpl{
+
+}
+
+class CourseServiceImpl{
+    -courseDescriptionMapper
+    -videoMapper
+    -chapterMapper
+    -commentMapper
+    -courseCollectMapper
+    -ossFileService
+    +saveCourseInfo()
+    +getCourseInfoById()
+    +updateCourseInfoById()
+    +selectPage()
+    +removeCoverById()
+    +removeCourseById()
+    +getCoursePublishVoById()
+    +webSelectList()
+    +selectWebCourseVoById()
+    +getCourseDtoById()
+    +updateBuyCountById()
+}
+'class SubjectServiceImpl{
+'    +batchImport()
+'    +nestedList()
+'}
+'
+'class TeacherServiceImpl{
+'    +ossFileService()
+'    +courseMapper()
+'    +selectPage
+'    +selectNameListByKey()
+'    +removeAvatarById()
+'    +updateById()
+'    +selectTeacherInfoById()
+'    +selectHotTeacher()
+'}
+
+class VideoServiceImpl{
+    -vodMediaService
+    +removeMediaVideoById()
+    +removeMediaVideoByChapterId()
+    +removeMediaVideoByCourseId()
+    +getVideoSourceIdList()
+}
+class OssFileServiceImpl{
+    -ossProperties
+    +upload()
+    +removeFile()
+}
+
+class OssProperties{
+    -endpoint;
+    -keyid;
+    -keysecret;
+    -bucketname;
+}
+
+interface ChapterMapper{
+
+}
+interface CourseCollectMapper{
+    +selectPageByMemberId()
+}
+
+interface CourseDescriptionMapper{
+
+}
+
+interface CourseMapper{
+    +selectPageByCourseQueryVo()
+    +selectCoursePublishVoById()
+    +selectWebCourseVoById()
+    +selectCourseDtoById()
+}
+'interface SubjectMapper{
+'    +selectNestedList()
+'}
+'interface TeacherMapper{
+'
+'}
+interface VideoMapper{
+
+}
+
+'RuntimeException <|-- CollegeException
+
+JwtUtils ..> JwtInfo
+'CollegeException --> ResultCodeEnum
+
+ApiCourseController --> CourseService
+ApiCourseController --> ChapterService
+ApiCourseCollectController --> CourseCollectService
+CourseController --> CourseService
+CourseController --> CourseDescriptionService
+CourseController --> VideoService
+ChapterController --> ChapterService
+ChapterController --> VideoService
+
+ChapterService <|.. ChapterServiceImpl
+CourseCollectService <|.. CourseCollectServiceImpl
+CourseDescriptionService <|.. CourseDescriptionServiceImpl
+CourseService <|.. CourseServiceImpl
+'SubjectService <|.. SubjectServiceImpl
+'TeacherService <|.. TeacherServiceImpl
+VideoService <|.. VideoServiceImpl
+OssFileService <|..OssFileServiceImpl
+
+ChapterServiceImpl --> VideoMapper
+CourseServiceImpl --> CourseDescriptionMapper
+CourseServiceImpl --> VideoMapper
+CourseServiceImpl --> ChapterMapper
+'CourseServiceImpl --> CommentMapper
+CourseServiceImpl --> CourseCollectMapper
+CourseServiceImpl --> OssFileService
+CourseServiceImpl --> CourseMapper
+VideoServiceImpl --> VodMediaService
+CourseCollectServiceImpl --> CourseCollectMapper
+CourseDescriptionServiceImpl --> CourseDescriptionMapper
+'SubjectServiceImpl --> SubjectMapper
+'TeacherServiceImpl --> TeacherMapper
+VideoServiceImpl -->VideoMapper
+
+CourseVo o-- ChapterVo
+ChapterVo o-- VideoVo
+
+Course o--- Chapter
+Chapter o-- Video
+
+
+BaseEntity <|--- Course
+BaseEntity <|--- Chapter
+BaseEntity <|-- CourseCollect
+BaseEntity <|--- Video
+R <. ChapterController
+R <. CourseController
+R <. ApiCourseCollectController
+R <. ApiCourseController
+
+CourseVo <.. CourseController
+
+CourseCollectVo<..ApiCourseCollectController
+VideoVo <.. ApiCourseController
+ChapterVo <.. ChapterController
+JwtUtils <.. ApiCourseCollectController
+JwtInfo <.. ApiCourseCollectController
+
+RedisUtil <.. CourseServiceImpl
+Course <.. CourseServiceImpl
+Course <.. CourseMapper
+CourseCollect <.. CourseCollectMapper
+CourseCollect <.. CourseCollectServiceImpl
+Video <.. VideoServiceImpl
+Video <.. VideoMapper
+Chapter <.. ChapterServiceImpl
+Chapter <.. ChapterMapper
+OssProperties <.. OssFileServiceImpl
+
+@enduml

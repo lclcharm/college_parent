@@ -1,0 +1,11 @@
+2021-05-07 00:07:08 |WARN  |main |DuplicateJsonObjectContextCustomizerFactory.java:78 |org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer |
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/java/mvnrep/org/json/json/20170516/json-20170516.jar!/org/json/JSONObject.class
+	jar:file:/D:/java/mvnrep/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+2021-05-07 00:07:21 |WARN  |main |URLConfigurationSource.java:121 |com.netflix.config.sources.URLConfigurationSource |No URLs will be polled as dynamic configuration sources.
+2021-05-07 00:07:21 |WARN  |main |URLConfigurationSource.java:121 |com.netflix.config.sources.URLConfigurationSource |No URLs will be polled as dynamic configuration sources.

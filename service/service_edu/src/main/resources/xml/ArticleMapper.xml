@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcl.college.service.edu.mapper.ArticleMapper">
+    <sql id="edu_article_column">
+	EDU_ARTICLE.ID,
+	EDU_ARTICLE.TITLE,
+	EDU_ARTICLE.SUMMARY,
+	EDU_ARTICLE.IMAGE_URL,
+	EDU_ARTICLE.SOURCE,
+	EDU_ARTICLE.AUTHOR,
+	EDU_ARTICLE.CREATE_TIME,
+	EDU_ARTICLE.PUBLISH_TIME,
+	EDU_ARTICLE.ARTICLE_TYPE,
+	EDU_ARTICLE.CLICK_NUM,
+	EDU_ARTICLE.PRAISE_COUNT,
+	EDU_ARTICLE.COMMENT_NUM,
+	EDU_ARTICLE.SORT
+	</sql>
+    <sql id="edu_article_property">
+	#{id},
+	#{title},
+	#{summary},
+	#{imageUrl},
+	#{source},
+	#{author},
+	#{createTime},
+	#{publishTime},
+	#{type},
+	#{clickNum},
+	#{praiseCount},
+	#{commentNum},
+	#{sort}
+	</sql>
+
+    <sql id="edu_article_content_column">
+	EDU_ARTICLE_CONTENT.ID,
+	EDU_ARTICLE_CONTENT.CONTENT
+	</sql>
+    <sql id="edu_article_content_property">
+	#{id},#{content}
+	</sql>
+
+    <resultMap type="Article" id="ArticleResult">
+        <result property="id" column="id"/>
+        <result property="title" column="TITLE"/>
+        <result property="summary" column="SUMMARY"/>
+        <result property="imageUrl" column="IMAGE_URL"/>
+        <result property="source" column="SOURCE"/>
+        <result property="author" column="AUTHOR"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="type" column="ARTICLE_TYPE"/>
+        <result property="clickNum" column="CLICK_NUM"/>
+        <result property="praiseCount" column="PRAISE_COUNT"/>
+        <result property="commentNum" column="COMMENT_NUM"/>
+        <result property="sort" column="SORT"/>
+
+    </resultMap>
+
+    <!-- 添加文章内容 -->
+    <insert id="addArticleContent" parameterType="ArticleContent">
+        INSERT INTO EDU_ARTICLE_CONTENT(<include refid="edu_article_content_column"/>)
+        VALUE(<include refid="edu_article_content_property"/>)
+    </insert>
+
+    <!-- 更新文章内容 -->
+    <update id="updateArticleContent" parameterType="ArticleContent">
+	UPDATE EDU_ARTICLE_CONTENT SET
+	EDU_ARTICLE_CONTENT.CONTENT=#{content}
+	WHERE EDU_ARTICLE_CONTENT.ID=#{id}
+	</update>
+
+    <!-- 删除文章内容 -->
+    <delete id="deleteArticleContentByArticleIds" parameterType="java.lang.String">
+	DELETE FROM EDU_ARTICLE_CONTENT WHERE EDU_ARTICLE_CONTENT.ID IN (${value})
+	</delete>
+
+    <!-- 通过文章ID，查询文章内容 -->
+    <select id="queryArticleContentByArticleId" parameterType="java.lang.String" resultType="java.lang.String">
+	SELECT CONTENT FROM edu_article_content WHERE ID =#{value}
+	</select>
+    <!-- 查询文章热榜 -->
+    <select id="getArticleRankList" resultType="Article">
+	SELECT * from edu_article order by CLICK_NUM desc limit 10
+	</select>
+
+
+	<!-- 更新文章浏览量 -->
+	<update id="updateArticleNum" parameterType="Map">
+		UPDATE EDU_ARTICLE SET
+		<if test="type=='clickNum'">
+			CLICK_NUM=CLICK_NUM${num}
+		</if>
+		<if test="type=='praiseCount'">
+			PRAISE_COUNT=PRAISE_COUNT${num}
+		</if>
+		<if test="type=='commentCount'">
+			COMMENT_NUM=COMMENT_NUM${num}
+		</if>
+		WHERE
+		EDU_ARTICLE.ID=#{id}
+	</update>
+
+	<!-- 公共多条件查询文章资讯列表,用于前台 -->
+	<select id="queryArticleList" parameterType="ArticleQueryVo" resultMap="ArticleResult">
+		SELECT <include refid="edu_article_column"/> FROM EDU_ARTICLE
+		WHERE
+		<if test="type>0">
+			EDU_ARTICLE.ARTICLE_TYPE=#{type}
+		</if>
+		<if test="orderby==0">
+			ORDER BY EDU_ARTICLE.CREATE_TIME DESC
+		</if>
+		<if test="orderby==1">
+			ORDER BY EDU_ARTICLE.CLICK_NUM DESC
+		</if>
+		<if test="count>0">
+			LIMIT #{count}
+		</if>
+	</select>
+	<!-- 查询上一篇或下一篇文章 -->
+	<select id="queryUpOrDownArticle" parameterType="java.util.Map" resultMap="ArticleResult">
+		SELECT <include refid="edu_article_column"/> FROM EDU_ARTICLE
+		WHERE
+		<if test="keyWord=='UP'">
+			AND <![CDATA[EDU_ARTICLE.ID <#{id}]]> ORDER BY ID DESC
+		</if>
+		<if test="keyWord=='DOWN'">
+			AND <![CDATA[EDU_ARTICLE.ID >#{id}]]> ORDER BY ID ASC
+		</if>
+		LIMIT 1
+	</select>
+
+	<!-- 获取所有文章总记录数 -->
+	<select id="queryAllArticleCount" resultType="int">
+	SELECT COUNT(1) FROM EDU_ARTICLE
+	</select>
+
+</mapper>

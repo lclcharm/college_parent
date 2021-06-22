@@ -1,0 +1,15 @@
+@startuml
+用户 -> web:输入用户名密码
+web-> API网关:路由
+API网关-> "service-ucenter":账号验证
+"service-ucenter"->ApiMemberController:login()
+ApiMemberController->MemberService:login()
+MemberService->MemberMapper:selectOne()
+
+MemberMapper-->MemberService:Member
+MemberService->ApiMemberController:jwtToken
+ApiMemberController->"service-ucenter":R
+"service-ucenter"->web:R
+web->用户:解析R，返回登录结果
+
+@enduml
